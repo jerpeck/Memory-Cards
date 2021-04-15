@@ -1,0 +1,11 @@
+.GameBoard{
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+    margin: 0 auto;
+}
+
+.card-row{
+    display: flex;
+    flex-direction: row;
+}
