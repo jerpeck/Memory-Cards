@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Card from './Card';
 import CardContainer from './CardContainer';
+import { v4 as uuidv4 } from 'uuid';
 import './GameBoard.css';
 
 class GameBoard extends Component{
@@ -20,7 +21,7 @@ class GameBoard extends Component{
                                 x={idxX}
                                 y={idxY}
                                 id={o.id}
-                                key={o.id}
+                                key={uuidv4}
                                 flipped={o.flipped}
                                 handleCardClicked={this.props.handleCardClicked}
                             />
