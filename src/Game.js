@@ -11,7 +11,8 @@ class Game extends Component{
         this.state={
             cardGrid: [],
             cardsFlipped: [],
-            numCardsFlipped: 0
+            numCardsFlipped: 0,
+            player1Cards: []
         }
         this.flipCard = this.flipCard.bind(this);
         this.handleCardClicked = this.handleCardClicked.bind(this);
@@ -34,6 +35,7 @@ class Game extends Component{
     }
     handleMatch(){
         // Award Cards
+        
         // Remove Cards from Grid
         // Reset State
     }
