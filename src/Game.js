@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import GameBoard from './GameBoard';
 import cardDeck from './cardDeck';
 import {createGrid, shuffle, addKeyVals} from './cardHelpers';
+import PlayerBoard from './PlayerBoard';
+import './Game.css';
 
 class Game extends Component{
     constructor(props){
@@ -14,6 +16,8 @@ class Game extends Component{
         this.flipCard = this.flipCard.bind(this);
         this.handleCardClicked = this.handleCardClicked.bind(this);
         this.checkMatch = this.checkMatch.bind(this);
+        this.handleMatch = this.handleMatch.bind(this);
+        this.handelNoMatch = this.handelNoMatch.bind(this);
     }
     async handleCardClicked(x, y){
         // flip card
@@ -23,10 +27,19 @@ class Game extends Component{
             // check match
             this.checkMatch() ?
                 // yes - handle match
-                alert('match')
+                this.handleMatch()
                 // no - flip cards back over
-                : alert('no match')
+                : this.handelNoMatch();
         }
+    }
+    handleMatch(){
+        // Award Cards
+        // Remove Cards from Grid
+        // Reset State
+    }
+    handelNoMatch(){
+        // Flip Cards Back
+        // Reset State
     }
     checkMatch(){
         const firstCard = this.state.cardGrid[this.state.cardsFlipped[0][0]][this.state.cardsFlipped[0][1]];
@@ -53,7 +66,10 @@ class Game extends Component{
     }
     render(){
         return(
-            <GameBoard cardGrid={this.state.cardGrid} handleCardClicked={this.handleCardClicked}/>
+            <div className='Game'>
+                <PlayerBoard player='Player 1'/>
+                <GameBoard cardGrid={this.state.cardGrid} handleCardClicked={this.handleCardClicked}/>
+            </div>
         );
     };
 };
