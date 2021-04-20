@@ -12,7 +12,8 @@ class Game extends Component{
             cardGrid: [],
             cardsFlipped: [],
             numCardsFlipped: 0,
-            player1Cards: []
+            player1Cards: [],
+            player2Cards: [],
         }
         this.flipCard = this.flipCard.bind(this);
         this.handleCardClicked = this.handleCardClicked.bind(this);
@@ -21,27 +22,37 @@ class Game extends Component{
         this.handelNoMatch = this.handelNoMatch.bind(this);
     }
     async handleCardClicked(x, y){
-        // flip card
-        await this.flipCard(x, y);
-        // if flipped cards = 2
+        this.flipCard(x, y);
+        const newNumCardsFlipped = this.state.numCardsFlipped + 1;
+        await this.setState({numCardsFlipped: newNumCardsFlipped})
         if(this.state.numCardsFlipped === 2){           
-            // check match
             this.checkMatch() ?
-                // yes - handle match
                 this.handleMatch()
-                // no - flip cards back over
                 : this.handelNoMatch();
         }
     }
     handleMatch(){
-        // Award Cards
-        
-        // Remove Cards from Grid
-        // Reset State
+        setTimeout(() => {
+            const {cardGrid, cardsFlipped} = this.state;
+            const cardsToPlayer = [cardGrid[cardsFlipped[0][0]][cardsFlipped[0][1]], cardGrid[cardsFlipped[1][0]][cardsFlipped[1][1]]];
+            cardGrid[cardsFlipped[0][0]][cardsFlipped[0][1]] = {};
+            cardGrid[cardsFlipped[1][0]][cardsFlipped[1][1]] = {};
+            const newCardGrid = cardGrid;
+            this.setState({
+                cardGrid: newCardGrid,
+                player1Cards: [
+                    ...this.state.player1Cards,
+                    ...cardsToPlayer
+                ],
+                cardsFlipped: [],
+                numCardsFlipped: 0
+        })}, 1000)
     }
     handelNoMatch(){
-        // Flip Cards Back
-        // Reset State
+        setTimeout(() => {
+            this.state.cardsFlipped.forEach(card => this.flipCard(card[0], card[1]));
+            this.setState({cardsFlipped: [], numCardsFlipped: 0})
+        }, 1000)
     }
     checkMatch(){
         const firstCard = this.state.cardGrid[this.state.cardsFlipped[0][0]][this.state.cardsFlipped[0][1]];
@@ -50,14 +61,12 @@ class Game extends Component{
     }
     flipCard(x, y){
         const cardGridToChange = this.state.cardGrid;
-        cardGridToChange[x][y].flipped = true;
-        const cardsFlippedToChange = this.state.cardsFlipped;
+        cardGridToChange[x][y].flipped = !cardGridToChange[x][y].flipped;
+        const cardsFlippedToChange = this.state.cardsFlipped;     
         cardsFlippedToChange.push([x, y]);
-        const newNumCardsFlipped = this.state.numCardsFlipped + 1;
         this.setState({
             cardGrid: cardGridToChange,
             cardsFlipped: cardsFlippedToChange,
-            numCardsFlipped: newNumCardsFlipped
         });
     }
     componentDidMount(){
@@ -69,8 +78,9 @@ class Game extends Component{
     render(){
         return(
             <div className='Game'>
-                <PlayerBoard player='Player 1'/>
+                <PlayerBoard player='Player 1' cards={this.state.player1Cards}/>
                 <GameBoard cardGrid={this.state.cardGrid} handleCardClicked={this.handleCardClicked}/>
+                <PlayerBoard player='Player 2' cards={this.state.player2Cards}/>
             </div>
         );
     };

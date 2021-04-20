@@ -16,6 +16,7 @@ class GameBoard extends Component{
                 <div className='card-row'>
                     {row.map((o, idxY) => 
                         <CardContainer>
+                            {o.text &&
                             <Card
                                 text={o.text}
                                 x={idxX}
@@ -24,7 +25,7 @@ class GameBoard extends Component{
                                 key={uuidv4}
                                 flipped={o.flipped}
                                 handleCardClicked={this.props.handleCardClicked}
-                            />
+                            />}
                         </CardContainer>
                     )}
                 </div>
