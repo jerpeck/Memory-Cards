@@ -6,7 +6,7 @@ import './PlayerBoard.css';
 class PlayerBoard extends Component{
 
     render(){
-        const {player, cards} = this.props;
+        const {player, cards, turn} = this.props;
         const playerCards = cards.map(o =>
             <Card
                 text={o.text}
@@ -17,7 +17,7 @@ class PlayerBoard extends Component{
             )
         return(
             <div className='PlayerBoard'>
-                <h1>
+                <h1 className={turn && 'playerName-turn'}>
                     {player}
                 </h1>
                 {playerCards}

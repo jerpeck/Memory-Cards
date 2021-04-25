@@ -25,6 +25,7 @@ class GameBoard extends Component{
                                 key={uuidv4}
                                 flipped={o.flipped}
                                 handleCardClicked={this.props.handleCardClicked}
+                                isMatching={this.props.isMatching}
                             />}
                         </CardContainer>
                     )}

@@ -14,6 +14,8 @@ class Game extends Component{
             numCardsFlipped: 0,
             player1Cards: [],
             player2Cards: [],
+            whoseTurn: 1,
+            isMatching: false,
         }
         this.flipCard = this.flipCard.bind(this);
         this.handleCardClicked = this.handleCardClicked.bind(this);
@@ -25,34 +27,38 @@ class Game extends Component{
         this.flipCard(x, y);
         const newNumCardsFlipped = this.state.numCardsFlipped + 1;
         await this.setState({numCardsFlipped: newNumCardsFlipped})
-        if(this.state.numCardsFlipped === 2){           
-            this.checkMatch() ?
-                this.handleMatch()
-                : this.handelNoMatch();
+        if(this.state.numCardsFlipped === 2){   
+            this.setState({isMatching: true});
+            setTimeout(
+                () => {
+                    this.checkMatch() ?
+                        this.handleMatch()
+                        : this.handelNoMatch();
+                    this.setState({isMatching: false, whoseTurn: this.state.whoseTurn === 1 ? 2 : 1})
+                },
+                1000
+            )        
         }
     }
     handleMatch(){
-        setTimeout(() => {
-            const {cardGrid, cardsFlipped} = this.state;
-            const cardsToPlayer = [cardGrid[cardsFlipped[0][0]][cardsFlipped[0][1]], cardGrid[cardsFlipped[1][0]][cardsFlipped[1][1]]];
-            cardGrid[cardsFlipped[0][0]][cardsFlipped[0][1]] = {};
-            cardGrid[cardsFlipped[1][0]][cardsFlipped[1][1]] = {};
-            const newCardGrid = cardGrid;
-            this.setState({
-                cardGrid: newCardGrid,
-                player1Cards: [
-                    ...this.state.player1Cards,
-                    ...cardsToPlayer
-                ],
-                cardsFlipped: [],
-                numCardsFlipped: 0
-        })}, 1000)
+        const {cardGrid, cardsFlipped} = this.state;
+        const cardsToPlayer = [cardGrid[cardsFlipped[0][0]][cardsFlipped[0][1]], cardGrid[cardsFlipped[1][0]][cardsFlipped[1][1]]];
+        cardGrid[cardsFlipped[0][0]][cardsFlipped[0][1]] = {};
+        cardGrid[cardsFlipped[1][0]][cardsFlipped[1][1]] = {};
+        const newCardGrid = cardGrid;
+        this.setState({
+            cardGrid: newCardGrid,
+            [`player${this.state.whoseTurn}Cards`]: [
+                ...this.state.player1Cards,
+                ...cardsToPlayer
+            ],
+            cardsFlipped: [],
+            numCardsFlipped: 0
+        })
     }
     handelNoMatch(){
-        setTimeout(() => {
             this.state.cardsFlipped.forEach(card => this.flipCard(card[0], card[1]));
             this.setState({cardsFlipped: [], numCardsFlipped: 0})
-        }, 1000)
     }
     checkMatch(){
         const firstCard = this.state.cardGrid[this.state.cardsFlipped[0][0]][this.state.cardsFlipped[0][1]];
@@ -78,9 +84,13 @@ class Game extends Component{
     render(){
         return(
             <div className='Game'>
-                <PlayerBoard player='Player 1' cards={this.state.player1Cards}/>
-                <GameBoard cardGrid={this.state.cardGrid} handleCardClicked={this.handleCardClicked}/>
-                <PlayerBoard player='Player 2' cards={this.state.player2Cards}/>
+                <PlayerBoard player='Player 1' cards={this.state.player1Cards} turn={this.state.whoseTurn === 1 ? true : false}/>
+                <GameBoard
+                    cardGrid={this.state.cardGrid}
+                    handleCardClicked={this.handleCardClicked}
+                    isMatching={this.state.isMatching}
+                />
+                <PlayerBoard player='Player 2' cards={this.state.player2Cards} turn={this.state.whoseTurn === 2 ? true : false}/>
             </div>
         );
     };

@@ -7,7 +7,9 @@ class Card extends Component{
         this.handleClick = this.handleClick.bind(this)
     }
     handleClick(){
-        this.props.handleCardClicked(this.props.x, this.props.y);
+        if(!this.props.isMatching){
+            this.props.handleCardClicked(this.props.x, this.props.y);
+        }
     }
     render(){
         const {flipped} = this.props;
