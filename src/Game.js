@@ -46,10 +46,11 @@ class Game extends Component{
         cardGrid[cardsFlipped[0][0]][cardsFlipped[0][1]] = {};
         cardGrid[cardsFlipped[1][0]][cardsFlipped[1][1]] = {};
         const newCardGrid = cardGrid;
+        const currentPlayerCards = this.state.whoseTurn === 1 ? this.state.player1Cards : this.state.player2Cards
         this.setState({
             cardGrid: newCardGrid,
             [`player${this.state.whoseTurn}Cards`]: [
-                ...this.state.player1Cards,
+                ...currentPlayerCards,
                 ...cardsToPlayer
             ],
             cardsFlipped: [],
